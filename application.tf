@@ -10,9 +10,6 @@ resource "google_compute_forwarding_rule" "App_04" {
   port_range            = "80-8080"
   ip_protocol           = "TCP"
 
-#  lifecycle {
-#    ignore_changes = [ "google_compute_forwarding_rule.App_04.id" ]
-#  }
 }
 
 
@@ -59,27 +56,12 @@ resource "local_file" "App_04_file" {
 }
 
 
-#data "template_file" "App_04_json" {
-#  depends_on    = ["null_resource.DO-run-REST", "google_compute_forwarding_rule.App_04" ]
-#  template = "${file("${path.module}/AS3/App_04.tpl")}"
-#
-#  vars {
-#    #Uncomment the following line for BYOL
-#    vip         = "${google_compute_forwarding_rule.App_04.ip_address}"
-#    zone        = "${var.zone}"
-#  }
-#  count         = "${length(var.bigip)}"
-#}
-#
-#
-#resource "local_file" "App_04_file" {
-#  content     = "${element( data.template_file.App_04_json.*.rendered, count.index )}"
-#  filename    = "${path.module}/tmp/App_04.json"
-#}
-
-
 resource "null_resource" "App-run-REST" {
-  depends_on = [ "local_file.App_04_file" ]
+
+  triggers = {
+    json_code = "${data.template_file.App_04_json.*.rendered[count.index]}"
+  }
+
   # Running AS3 REST API
   provisioner "local-exec" {
     command = <<-EOF

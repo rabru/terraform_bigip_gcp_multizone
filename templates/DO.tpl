@@ -1,5 +1,5 @@
 {
-    "schemaVersion": "1.0.0",
+    "schemaVersion": "1.3.0",
     "class": "Device",
     "label": "Basic onboarding",
     "Common": {

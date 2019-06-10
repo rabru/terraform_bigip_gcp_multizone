@@ -17,10 +17,21 @@ resource "google_compute_instance" "bigip" {
     }
   }
   metadata_startup_script = "${data.template_file.modify_root.rendered}"
+
+  provisioner "remote-exec" {
+    script = "${local_file.vm_onboard_file.filename}"
+    connection {
+      type        = "ssh"
+#      host        = "${element(google_compute_instance.bigip.*.network_interface.0.access_config.0.nat_ip, count.index)}"
+      user        = "root"
+      password    = "${var.rpassword}"
+      private_key = "${file("${var.ssh_private_key}")}"
+      timeout     = "10m"
+    }
+  }
   count                   = "${length(var.bigip)}"
 
 }
-
 
 # Setup root password scripts
 data "template_file" "modify_root" {
@@ -57,29 +68,10 @@ resource "local_file" "vm_onboard_file" {
 }
 
 
-resource "null_resource" "onboard_bigip" {
-# Enforce in case the bigip is rebuild:
-  depends_on = [ "google_compute_instance.bigip" ]
-
-  provisioner "remote-exec" {
-    script = "${local_file.vm_onboard_file.filename}"
-    connection {
-      type        = "ssh"
-      host        = "${element(google_compute_instance.bigip.*.network_interface.0.access_config.0.nat_ip, count.index)}"
-      user        = "root"
-      password    = "${var.rpassword}" 
-      private_key = "${file("${var.ssh_private_key}")}"
-      timeout     = "10m"
-    }
-  }
-  count           = "${length(var.bigip)}"
-}
-
 
 ### Declarative Onboarding ###
 
 data "template_file" "DO_json" {
-  depends_on = [ "null_resource.onboard_bigip" ]
 
   template = "${file("${path.module}/templates/DO.tpl")}"
   vars {
@@ -104,8 +96,10 @@ resource "local_file" "DO_file" {
 
 ### REST call for Declarative Onboarding ###
 resource "null_resource" "DO-run-REST" {
-# Enforce in case the bigip is rebuild:
-  depends_on = [ "google_compute_instance.bigip" ]
+
+  triggers = {
+    json_code = "${data.template_file.DO_json.*.rendered[count.index]}"
+  }
 
   # Running DO REST API
   provisioner "local-exec" {

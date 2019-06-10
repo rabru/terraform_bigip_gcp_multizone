@@ -58,6 +58,8 @@ resource "local_file" "vm_onboard_file" {
 
 
 resource "null_resource" "onboard_bigip" {
+# Enforce in case the bigip is rebuild:
+  depends_on = [ "google_compute_instance.bigip" ]
 
   provisioner "remote-exec" {
     script = "${local_file.vm_onboard_file.filename}"
@@ -102,6 +104,8 @@ resource "local_file" "DO_file" {
 
 ### REST call for Declarative Onboarding ###
 resource "null_resource" "DO-run-REST" {
+# Enforce in case the bigip is rebuild:
+  depends_on = [ "google_compute_instance.bigip" ]
 
   # Running DO REST API
   provisioner "local-exec" {

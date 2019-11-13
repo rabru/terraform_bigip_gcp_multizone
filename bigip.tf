@@ -107,13 +107,27 @@ resource "null_resource" "DO-run-REST" {
       #!/bin/bash
       sleep 30
       curl -k -X GET https://${element(google_compute_instance.bigip.*.network_interface.0.access_config.0.nat_ip, count.index)}:${var.rest_port}${var.rest_do_uri} \
-              -u ${var.uname}:${var.upassword}
+	-u ${var.uname}:${var.upassword}
 #      sleep 10
       curl -k -X ${var.rest_do_method} https://${element(google_compute_instance.bigip.*.network_interface.0.access_config.0.nat_ip, count.index)}:${var.rest_port}${var.rest_do_uri} \
-              -u ${var.uname}:${var.upassword} \
-              -d @${local_file.DO_file.*.filename[count.index]}
+	-u ${var.uname}:${var.upassword} \
+        -H "Content-Type: application/json" \
+	-d @${local_file.DO_file.*.filename[count.index]}
     EOF
   }
+
+  # Revoke license, if destroy
+  provisioner "local-exec" {
+    when    = "destroy"
+    command = <<-EOF
+      #!/bin/bash
+      curl -k -X ${var.rest_do_method} https://${element(google_compute_instance.bigip.*.network_interface.0.access_config.0.nat_ip, count.index)}:${var.rest_port}/mgmt/tm/sys/license \
+	-u ${var.uname}:${var.upassword} \
+        -H "Content-Type: application/json" \
+	-d "{\"command\": \"revoke\"}"
+    EOF
+  }
+
   count = "${length(var.bigip)}"
 }
 

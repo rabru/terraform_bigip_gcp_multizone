@@ -21,11 +21,11 @@ variable "bigip"            {
   default = [
     {
       zone     = "europe-west3-c"
-      license  = "OQDIJ-YTCZK-QZYDW-WZEXL-XYAVMHN"
-#    },
-#    {
-#      zone     = "europe-west3-b"
-#      license  = "EKHZA-XMZPQ-EIEND-QCPJL-WQZDPRV"
+      license  = "PLCIA-BKRSJ-UWCYO-YFVCY-CEFSIPB"
+    },
+    {
+      zone     = "europe-west3-b"
+      license  = "EKHZA-XMZPQ-EIEND-QCPJL-WQZDPRV"
 #    },
 #    {
 #      zone     = "europe-west3-a"

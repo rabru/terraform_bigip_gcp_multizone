@@ -21,8 +21,8 @@ CNT=0
 while true
 do
   STATUS=$(curl -s -k -I github.com | grep HTTP)
-  if [[ $STATUS == *"200"* ]]; then
-    echo "Got 200! VE is Ready!"
+  if [[ $STATUS == *"301"* ]]; then
+    echo "Got 301! VE is Ready!"
     break
   elif [ $CNT -le 6 ]; then
     echo "Status code: $STATUS  Not done yet..."

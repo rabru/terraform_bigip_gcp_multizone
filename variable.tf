@@ -21,15 +21,15 @@ variable "bigip"            {
   default = [
     {
       zone     = "europe-west3-c"
-      license  = "DMNDG-QHNEK-QJPYQ-FSAUW-WCZGYIA"
-    },
-    {
-      zone     = "europe-west3-b"
-      license  = "OZCYT-ZTHIL-JRVTC-FUXCJ-EFMKGMF"
+      license  = "OQDIJ-YTCZK-QZYDW-WZEXL-XYAVMHN"
+#    },
+#    {
+#      zone     = "europe-west3-b"
+#      license  = "EKHZA-XMZPQ-EIEND-QCPJL-WQZDPRV"
 #    },
 #    {
 #      zone     = "europe-west3-a"
-#      license  = "GJZBO-YDOGB-QZTHL-ZUSIT-HDUMVFO"
+#      license  = "HVVDT-CEHSO-LQMQZ-HXEQF-ERBCHOJ"
     }
   ]
 }
@@ -44,9 +44,9 @@ variable timezone             { default = "UTC" }
 
 
 ## Please check and update the latest DO URL from https://github.com/F5Networks/f5-declarative-onboarding/tree/master/dist
-variable DO_onboard_URL       { default = "https://github.com/F5Networks/f5-declarative-onboarding/raw/master/dist/f5-declarative-onboarding-1.4.1-1.noarch.rpm" }
+variable DO_onboard_URL       { default = "https://github.com/F5Networks/f5-declarative-onboarding/releases/download/v1.8.0/f5-declarative-onboarding-1.8.0-2.noarch.rpm" }
 ## Please check and update the latest AS3 URL from https://github.com/F5Networks/f5-appsvcs-extension/releases/latest
-variable AS3_URL              { default = "https://github.com/F5Networks/f5-appsvcs-extension/raw/master/dist/lts/f5-appsvcs-3.5.1-5.noarch.rpm" }
+variable AS3_URL              { default = "https://github.com/F5Networks/f5-appsvcs-extension/releases/download/v3.13.1/f5-appsvcs-3.13.1-1.noarch.rpm" }
 variable libs_dir             { default = "/config/cloud/google/node_modules" }
 variable onboard_log          { default = "/var/log/startup-script.log" }
 

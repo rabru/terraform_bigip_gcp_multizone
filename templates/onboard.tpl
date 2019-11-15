@@ -15,7 +15,6 @@ fi
 
 exec 1>$LOG_FILE 2>&1
 
-
 # CHECK TO SEE NETWORK IS READY
 CNT=0
 while true
@@ -34,7 +33,6 @@ do
   sleep 10
 done
 
-
 ### DOWNLOAD ONBOARDING PKGS
 # Could be pre-packaged or hosted internally
 admin_username='${uname}'
@@ -48,13 +46,49 @@ REST_PORT=${restPort}
 
 mkdir -p ${libs_dir}
 
+#### Download DO
 echo -e "\n"$(date) "Download Declarative Onboarding Pkg"
 echo "Execute: curl -L -o ${libs_dir}/$DO_FN $DO_URL"
-curl -L -o ${libs_dir}/$DO_FN $DO_URL
+CNT=0
+while true
+do
+  curl -L -o ${libs_dir}/$DO_FN $DO_URL
+  if [ -f ${libs_dir}/$DO_FN ]; then
+    echo "File was downloaded!"
+    break
+  elif [ $CNT -le 6 ]; then
+    echo "Not downloaded yet..."
+    CNT=$[$CNT+1]
+  else
+    echo "GIVE UP..."
+    break
+  fi
+  sleep 10
+done
 
+
+#### Download AS3
 echo -e "\n"$(date) "Download AS3 Pkg"
 echo "Execute: curl -L -o ${libs_dir}/$AS3_FN $AS3_URL"
-curl -L -o ${libs_dir}/$AS3_FN $AS3_URL
+CNT=0
+while true
+do
+  curl -L -o ${libs_dir}/$AS3_FN $AS3_URL
+  if [ -f ${libs_dir}/$AS3_FN ]; then
+    echo "File was downloaded!"
+    break
+  elif [ $CNT -le 6 ]; then
+    echo "Not downloaded yet..."
+    CNT=$[$CNT+1]
+  else
+    echo "GIVE UP..."
+    break
+  fi
+  sleep 10
+done
+
+
+
 echo "Sleep 20 Seconds"
 sleep 20
 

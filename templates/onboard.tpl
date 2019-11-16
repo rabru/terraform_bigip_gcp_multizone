@@ -55,7 +55,15 @@ do
   curl -L -o ${libs_dir}/$DO_FN $DO_URL
   if [ -f ${libs_dir}/$DO_FN ]; then
     echo "File was downloaded!"
-    break
+    curl -L -o ${libs_dir}/$DO_FN.sha256 $DO_URL.sha256
+
+    echo "sha256sum file  : `cat ${libs_dir}/$DO_FN.sha256 | cut -d' ' -f1`"
+    echo "sha256sum result: `sha256sum ${libs_dir}/$DO_FN | cut -d' ' -f1`"
+    if [[ `cat ${libs_dir}/$DO_FN.sha256 | cut -d' ' -f1` == `sha256sum ${libs_dir}/$DO_FN | cut -d' ' -f1` ]]; then
+      break
+    else
+      echo "error: Wrong checksum!"
+    fi
   elif [ $CNT -le 6 ]; then
     echo "Not downloaded yet..."
     CNT=$[$CNT+1]
@@ -76,7 +84,15 @@ do
   curl -L -o ${libs_dir}/$AS3_FN $AS3_URL
   if [ -f ${libs_dir}/$AS3_FN ]; then
     echo "File was downloaded!"
-    break
+    curl -L -o ${libs_dir}/$AS3_FN.sha256 $AS3_URL.sha256
+
+    echo "sha256sum file  : `cat ${libs_dir}/$AS3_FN.sha256 | cut -d' ' -f1`"
+    echo "sha256sum result: `sha256sum ${libs_dir}/$AS3_FN | cut -d' ' -f1`"
+    if [[ `cat ${libs_dir}/$AS3_FN.sha256 | cut -d' ' -f1` == `sha256sum ${libs_dir}/$AS3_FN | cut -d' ' -f1` ]]; then
+      break
+    else
+      echo "error: Wrong checksum!"
+    fi
   elif [ $CNT -le 6 ]; then
     echo "Not downloaded yet..."
     CNT=$[$CNT+1]

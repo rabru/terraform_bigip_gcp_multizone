@@ -20,11 +20,17 @@ resource "google_compute_instance" "bigip" {
   }
   metadata_startup_script = data.template_file.modify_root.rendered
 
+  count = length(var.bigip)
+}
+
+
+resource "null_resource" "vm_onboarding" {
+
   provisioner "remote-exec" {
     script = local_file.vm_onboard_file.filename
     connection {
       type = "ssh"
-      host        = element(google_compute_instance.bigip.*.network_interface.0.access_config.0.nat_ip, count.index)
+      host        = google_compute_instance.bigip[count.index].network_interface.0.access_config.0.nat_ip
       user        = "root"
       password    = var.rpassword
       private_key = file(var.ssh_private_key)
@@ -33,6 +39,7 @@ resource "google_compute_instance" "bigip" {
   }
   count = length(var.bigip)
 }
+
 
 # Setup root password scripts
 data "template_file" "modify_root" {
@@ -93,16 +100,19 @@ resource "local_file" "DO_file" {
 
 ### REST call for Declarative Onboarding ###
 resource "null_resource" "DO-run-REST" {
+  depends_on = [
+    null_resource.vm_onboarding
+  ]
+
   triggers = {
     json_code = data.template_file.DO_json[count.index].rendered
   }
 
   # Running DO REST API
-  # Running DO REST API
   provisioner "local-exec" {
     command = <<-EOF
       #!/bin/bash
-      sleep 30
+      sleep 10
       curl -k -X GET https://${element(
     google_compute_instance.bigip.*.network_interface.0.access_config.0.nat_ip,
     count.index,
@@ -120,7 +130,6 @@ EOF
 
 }
 
-# Revoke license, if destroy
 # Revoke license, if destroy
 provisioner "local-exec" {
   when = destroy

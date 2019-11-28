@@ -32,8 +32,9 @@ resource "google_compute_http_health_check" "bigip" {
 
 data "template_file" "App_04_json" {
   depends_on = [
+#    null_resource.vm_onboarding,
     null_resource.DO-run-REST,
-    google_compute_forwarding_rule.App_04,
+#    google_compute_forwarding_rule.App_04,
   ]
   template = file("${path.module}/AS3/App_04.tpl")
 
@@ -52,8 +53,13 @@ resource "local_file" "App_04_file" {
 }
 
 resource "null_resource" "App-run-REST" {
+  depends_on = [
+    null_resource.DO-run-REST,
+  ]
   triggers = {
-    json_code = data.template_file.App_04_json[count.index].rendered
+#    json_code = data.template_file.App_04_json[count.index].rendered,
+#    bigip_instance_id = google_compute_instance.bigip[count.index].instance_id
+    DO-run-REST_id = null_resource.DO-run-REST[count.index].id
   }
 
   # Running AS3 REST API

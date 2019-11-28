@@ -25,7 +25,9 @@ resource "google_compute_instance" "bigip" {
 
 
 resource "null_resource" "vm_onboarding" {
-
+  triggers = {
+     bigip_instance_id = google_compute_instance.bigip[count.index].instance_id
+  }
   provisioner "remote-exec" {
     script = local_file.vm_onboard_file.filename
     connection {
@@ -50,7 +52,7 @@ data "template_file" "modify_root" {
   }
 }
 
-# Only stor the file for debugging
+# Only store the file for debugging
 resource "local_file" "modify_root_file" {
   content  = data.template_file.modify_root.rendered
   filename = "${path.module}/tmp/modify_root.sh"
@@ -105,7 +107,8 @@ resource "null_resource" "DO-run-REST" {
   ]
 
   triggers = {
-    json_code = data.template_file.DO_json[count.index].rendered
+#    json_code = data.template_file.DO_json[count.index].rendered,
+    vm_onboarding_id = null_resource.vm_onboarding[count.index].id
   }
 
   # Running DO REST API
@@ -128,30 +131,33 @@ resource "null_resource" "DO-run-REST" {
 	-d @${local_file.DO_file[count.index].filename}
 EOF
 
-}
+  }
 
-# Revoke license, if destroy
-provisioner "local-exec" {
-  when = destroy
-  command = <<-EOF
+  # Revoke license, if destroy
+  provisioner "local-exec" {
+    when = destroy
+    command = <<-EOF
       #!/bin/bash
       curl -k -X ${var.rest_do_method} https://${element(
-  google_compute_instance.bigip.*.network_interface.0.access_config.0.nat_ip,
-  count.index,
+    google_compute_instance.bigip.*.network_interface.0.access_config.0.nat_ip,
+    count.index,
 )}:${var.rest_port}/mgmt/tm/sys/license \
 	-u ${var.uname}:${var.upassword} \
         -H "Content-Type: application/json" \
 	-d "{\"command\": \"revoke\"}"
 EOF
+  }
 
-}
-
-count = length(var.bigip)
+  count = length(var.bigip)
 }
 
 ##### Output ######
 
 output "Public_IP_of_BIG-IP" {
   value = google_compute_instance.bigip.*.network_interface.0.access_config.0.nat_ip
+}
+
+output "bigipID" {
+  value = null_resource.vm_onboarding.*.triggers.bigip_instance_id
 }
 

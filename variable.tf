@@ -49,10 +49,10 @@ variable "bigip" {
     {
       zone    = "europe-west3-c"
       license = "WWKFB-DPMJJ-ZPZFT-TXFVH-OVIXEJG"
-#    },
-#    {
-#      zone     = "europe-west3-b"
-#      license  = "EKHZA-XMZPQ-EIEND-QCPJL-WQZDPRV"
+    },
+    {
+      zone     = "europe-west3-b"
+      license  = "EKHZA-XMZPQ-EIEND-QCPJL-WQZDPRV"
 #    },
 #    {
 #      zone     = "europe-west3-a"

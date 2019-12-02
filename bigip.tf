@@ -25,7 +25,9 @@ resource "google_compute_instance" "bigip" {
 
 
 resource "null_resource" "vm_onboarding" {
-
+  triggers = {
+     bigip_instance_id = google_compute_instance.bigip[count.index].instance_id
+  }
   provisioner "remote-exec" {
     script = local_file.vm_onboard_file.filename
     connection {
@@ -105,7 +107,8 @@ resource "null_resource" "DO-run-REST" {
   ]
 
   triggers = {
-    json_code = data.template_file.DO_json[count.index].rendered
+#    json_code = data.template_file.DO_json[count.index].rendered,
+    vm_onboarding_id = null_resource.vm_onboarding[count.index].id
   }
 
   # Running DO REST API

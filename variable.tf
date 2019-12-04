@@ -22,7 +22,7 @@ variable "rpassword" {
   default = "Demo-123"
 }
 
-# Project
+# Project (No capital letter in name!)
 variable "prefix" {
   default = "multizone-demo"
 }
@@ -48,17 +48,18 @@ variable "bigip" {
   default = [
     {
       zone    = "europe-west3-c"
-      license = "PLCIA-BKRSJ-UWCYO-YFVCY-CEFSIPB"
-    },
+      license = "WWKFB-DPMJJ-ZPZFT-TXFVH-OVIXEJG"
+#    },
+#    {
+#      zone     = "europe-west3-b"
+#      license  = "EKHZA-XMZPQ-EIEND-QCPJL-WQZDPRV"
+#    },
+#    {
+#      zone     = "europe-west3-a"
+#      license  = "HVVDT-CEHSO-LQMQZ-HXEQF-ERBCHOJ"
+    }
+
   ]
-  #    },
-  #    {
-  #      zone     = "europe-west3-b"
-  #      license  = "EKHZA-XMZPQ-EIEND-QCPJL-WQZDPRV"
-  #    },
-  #    {
-  #      zone     = "europe-west3-a"
-  #      license  = "HVVDT-CEHSO-LQMQZ-HXEQF-ERBCHOJ"
 }
 
 # BIGIP Setup

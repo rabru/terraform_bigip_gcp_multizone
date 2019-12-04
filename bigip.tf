@@ -1,4 +1,5 @@
 resource "google_compute_instance" "bigip" {
+  depends_on = [google_compute_firewall.mgmt]
   project = var.project
   zone    = var.bigip[count.index]["zone"]
 

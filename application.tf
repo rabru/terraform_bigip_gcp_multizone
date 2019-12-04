@@ -90,8 +90,28 @@ resource "null_resource" "App-run-REST" {
 
 EOF
 
-}
-count = length(var.bigip)
+  }
+
+  # Running AS3 REST API to destroy
+  provisioner "local-exec" {
+    when = destroy
+    command = <<-EOF
+      #!/bin/bash
+#      sleep 15
+      echo "Start ------------------- "
+      curl -k -X ${var.rest_as3_method} https://${element(
+    google_compute_instance.bigip.*.network_interface.0.access_config.0.nat_ip,
+    count.index,
+)}:${var.rest_port}${var.rest_as3_uri} \
+              -u ${var.uname}:${var.upassword} \
+              -d @${path.module}/AS3/App_04_destroy.json
+
+EOF
+
+  }
+
+
+  count = length(var.bigip)
 }
 
 #### Output ####

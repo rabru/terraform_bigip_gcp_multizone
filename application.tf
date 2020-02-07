@@ -43,44 +43,33 @@ module "App04" {
 ### AS3 ###
 
 data "template_file" "App_04_json" {
-  depends_on = [
-    null_resource.DO-run-REST
-#    google_compute_forwarding_rule.App_04,
-#    module.App04,
-  ]
   template = file("${path.module}/AS3/App_04.tpl")
 
   vars = {
     #Uncomment the following line for BYOL
 #    vip  = google_compute_forwarding_rule.App_04.ip_address
     vip  = module.App04.externIP
-    zone = var.bigip[count.index]["zone"]
+    zone = "${var.region}-${var.bigips[count.index]["zone"]}"
   }
-  count = length(var.bigip)
+  count = length(var.bigips)
 }
 
 resource "local_file" "App_04_file" {
   content  = element(data.template_file.App_04_json.*.rendered, count.index)
   filename = "${path.module}/tmp/App_04-${count.index}.json"
-  count    = length(var.bigip)
+  count    = length(var.bigips)
 }
 
 resource "null_resource" "App-run-REST" {
-  depends_on = [
-    null_resource.DO-run-REST,
-  ]
   triggers = {
-#    json_code = data.template_file.App_04_json[count.index].rendered,
-#    bigip_instance_id = google_compute_instance.bigip[count.index].instance_id
-    DO-run-REST_id = null_resource.DO-run-REST[count.index].id
+    json_code = data.template_file.App_04_json[count.index].rendered,
+    bigip_instance_id = google_compute_instance.bigip[count.index].instance_id
   }
 
   # Running AS3 REST API
   provisioner "local-exec" {
     command = <<-EOF
       #!/bin/bash
-#      sleep 15
-
       curl -k -X ${var.rest_as3_method} https://${element(
     google_compute_instance.bigip.*.network_interface.0.access_config.0.nat_ip,
     count.index,
@@ -97,7 +86,6 @@ EOF
     when = destroy
     command = <<-EOF
       #!/bin/bash
-#      sleep 15
       echo "Start ------------------- "
       curl -k -X ${var.rest_as3_method} https://${element(
     google_compute_instance.bigip.*.network_interface.0.access_config.0.nat_ip,
@@ -111,7 +99,7 @@ EOF
   }
 
 
-  count = length(var.bigip)
+  count = length(var.bigips)
 }
 
 #### Output ####

@@ -5,21 +5,17 @@ variable "ssh_private_key" {
 
 # Create on Google Cloud Platform Console at IAM & admin -> Service accounts for your Service Account a new Key and store it as json: 
 variable "gcp_credentials" {
-  default = "~/.gcp/f5-gcs-4261-sales-emea-dach.json"
 }
 
 # USER Setup
 variable "uname" {
-  default = "ralf"
 }
 
 variable "upassword" {
-  default = "Demo-123"
 }
 
 # Will set the root password to:
 variable "rpassword" {
-  default = "Demo-123"
 }
 
 # Project (No capital letter in name!)
@@ -39,27 +35,12 @@ variable "zone" {
   default = "europe-west3-a"
 }
 
-#  [appendix, zone, license]
-variable "bigip" {
+#  [zone, license]
+variable "bigips" {
   type = list(object({
     zone = string
     license = string
   }))
-  default = [
-    {
-      zone    = "europe-west3-c"
-      license = "CVNFT-NVLMM-WIPUP-YXYNN-WIKUABN"
-    },
-    {
-      zone     = "europe-west3-b"
-      license  = "UTHCK-ISHUG-PAPEG-TDIIK-NUNBVDK"
-#    },
-#    {
-#      zone     = "europe-west3-a"
-#      license  = "TQHDR-RHCNC-LGOYM-CDWCO-KPNQMCW"
-    }
-
-  ]
 }
 
 # BIGIP Setup
@@ -76,7 +57,7 @@ variable "dns_server" {
 }
 
 variable "dns_search" {
-  default = "[ \"f5.com\", \"example.com\" ]"
+  default = "[ \"f5demo.com\", \"example.com\" ]"
 }
 
 variable "ntp_server" {

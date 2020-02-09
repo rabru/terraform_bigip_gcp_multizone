@@ -1,8 +1,3 @@
-# The related public key must be uploaded on Google Cloud Platform Console at Compute Engine -> Metadata -> SSH Keys: 
-variable "ssh_private_key" {
-  default = "~/.ssh/gcp_rsa"
-}
-
 # Create on Google Cloud Platform Console at IAM & admin -> Service accounts for your Service Account a new Key and store it as json: 
 variable "gcp_credentials" {
 }

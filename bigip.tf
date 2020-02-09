@@ -28,7 +28,6 @@ resource "google_compute_instance" "bigip" {
       host        = self.network_interface.0.access_config.0.nat_ip
       user        = "root"
       password    = var.rpassword
-      private_key = file(var.ssh_private_key)
       timeout     = "10m"
     }
   }

@@ -96,17 +96,17 @@ terraform apply
 
 Validate the plan and accept with 'yes', if okay.
 
-## Use the F5 BIG-IP Provider
+## Use F5 BIG-IP Provider
 
-Since the F5 BIG-IP Provider can only be used, if the BIG-IP is already up and running. It is important to deploy first the BIG-IPs over terraform. After at least the first BIG-IPs is deployed, the F5 Provider can be used. To enable the deployment, do the following command:
+Since the F5 BIG-IP Provider can only be used, if the target BIG-IP is already up and running, it is important to deploy the BIG-IPs over terraform first. After at least one BIG-IPs is deployed, the F5 Provider can be used. To enable the deployment, do the following command:
 
 ```
 mv imperative.tf_ mperative.tf
 ```
 
-It is not possible to use count over a provider, therefore I did the deployment only on the first BIG-IP in the list. It is possible to configure additional BIG-IPs by using alias in provider, but not out of the dynamic list. This is implemented to get some experiences with this module. Feel free to play around with it.
+It is not possible to use count over a provider, therefore I did the deployment only on the first BIG-IP in the list. It is possible to configure additional BIG-IPs by using alias in provider, but not out of a dynamic list. Out of this limitation, it doesn't make sense to use F5 BIG-IP Provider in this dynamic deployment. I just left it in, for demo purposes. Feel free to play around with it.
 
-To deploy the configuration apply again the setup:
+To deploy the configuration, apply again the setup:
 
 ```
 terraform apply

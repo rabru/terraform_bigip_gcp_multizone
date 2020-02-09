@@ -77,21 +77,37 @@ gcloud iam service-accounts keys create terraform-gcp-keyfile.json --iam-account
 
 Clone the repository to your location:
 ```
-> git clone https://github.com/rabru/terraform_bigip_gcp_multizone.git
-> cd terraform_bigip_gcp_multizone
+git clone https://github.com/rabru/terraform_bigip_gcp_multizone.git
+cd terraform_bigip_gcp_multizone
 ```
 
-Adapt the configuration in terraform.tfvars to your needs and environment. Also replace the license keys for the BIG-IPs.
+Adapt the configuration in `terraform.tfvars` to your needs and environment. Also replace the license keys for the BIG-IPs.
 Install all necessary modules for terraform:
 
 ```
-> terraform init
+terraform init
 ```
 
 Start the deployment:
 
 ```
-> terraform apply
+terraform apply
 ```
 
 Validate the plan and accept with 'yes', if okay.
+
+## Use the F5 BIG-IP Provider
+
+Since the F5 BIG-IP Provider can only be used, if the BIG-IP is already up and running. It is important to deploy first the BIG-IPs over terraform. After at least the first BIG-IPs is deployed, the F5 Provider can be used. To enable the deployment, do the following command:
+
+```
+mv imperative.tf_ mperative.tf
+```
+
+It is not possible to use count over a provider, therefore I did the deployment only on the first BIG-IP in the list. It is possible to configure additional BIG-IPs by using alias in provider, but not out of the dynamic list. This is implemented to get some experiences with this module. Feel free to play around with it.
+
+To deploy the configuration apply again the setup:
+
+```
+terraform apply
+```

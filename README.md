@@ -72,3 +72,26 @@ Finally, we can create and download a key file that Terraform will use to authen
 ```
 gcloud iam service-accounts keys create terraform-gcp-keyfile.json --iam-account=<service_account_name>@<project_name>.iam.gserviceaccount.com
 ```
+
+## BIG-IP GCP multizone deployment
+
+Clone the repository to your location:
+```
+> git clone https://github.com/rabru/terraform_bigip_gcp_multizone.git
+> cd terraform_bigip_gcp_multizone
+```
+
+Adapt the configuration in terraform.tfvars to your needs and environment. Also replace the license keys for the BIG-IPs.
+Install all necessary modules for terraform:
+
+```
+> terraform init
+```
+
+Start the deployment:
+
+```
+> terraform apply
+```
+
+Validate the plan and accept with 'yes', if okay.

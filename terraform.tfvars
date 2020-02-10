@@ -41,6 +41,7 @@ AS3_URL        = "https://github.com/F5Networks/f5-appsvcs-extension/releases/do
 ## Google Cloud Provider
 # Create on Google Cloud Platform Console at IAM & admin -> Service accounts for your Service Account a new Key and store it as json:
 gcp_credentials = "../terraform-gcp-keyfile.json"
+project		= "f5-gcs-4261-sales-emea-dach"
 region          = "europe-west3"
 zone            = "europe-west3-a"
 

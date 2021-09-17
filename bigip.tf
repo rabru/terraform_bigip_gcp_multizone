@@ -7,7 +7,7 @@ resource "google_compute_instance" "bigip" {
   machine_type = "n1-standard-4"
   boot_disk {
     initialize_params {
-      image = "https://www.googleapis.com/compute/v1/projects/f5-7626-networks-public/global/images/f5-byol-bigip-13-1-1-0-0-4-all-2slot"
+      image = "https://www.googleapis.com/compute/v1/projects/f5-7626-networks-public/global/images/f5-bigip-15-1-2-1-0-0-10-byol-all-modules-2boot-loc-0115161130"
     }
   }
   network_interface {
